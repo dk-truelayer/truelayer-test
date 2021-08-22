@@ -30,6 +30,7 @@ namespace TrueLayer.Api
             services.AddScoped<IPokemonService, PokemonService>();
 
             services.ConfigurePokemonClient(Configuration);
+            services.ConfigureTranslation(Configuration);
 
             services.AddHttpClient();
             

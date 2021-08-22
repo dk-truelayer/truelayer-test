@@ -5,6 +5,7 @@ using System.Net.Http.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using TrueLayer.Api.Features.PokemonClient;
+using TrueLayer.Api.Features.Translation;
 using TrueLayer.Api.Models;
 using TrueLayer.Api.ViewModels;
 
@@ -27,13 +28,13 @@ namespace TrueLayer.Api.Services
 
     public class PokemonService : IPokemonService
     {
-        private readonly IHttpClientFactory _httpClientFactory;
         private readonly IPokemonClient _pokemonClient;
+        private readonly ITranslationClient _translationClient;
 
-        public PokemonService(IHttpClientFactory httpClientFactory, IPokemonClient pokemonClient)
+        public PokemonService(IPokemonClient pokemonClient, ITranslationClient translationClient)
         {
-            _httpClientFactory = httpClientFactory;
             _pokemonClient = pokemonClient;
+            _translationClient = translationClient;
         }
 
         public async Task<PokemonViewModel?> GetPokemonInformation(string name)
@@ -62,59 +63,20 @@ namespace TrueLayer.Api.Services
             return _pokemonClient.GetPokemonWithName(name);
         }
 
-        private Task<Pokemon> Translate(Pokemon pokemon)
+        private async Task<Pokemon> Translate(Pokemon pokemon)
         {
-            return pokemon switch
+            var translationLanguage = pokemon switch
             {
-                {Habitat: "cave"} or {IsLegendary: true} => TranslateToYoda(pokemon),
-                { } => TranslateToShakespeare(pokemon)
+                {Habitat: "cave"} or {IsLegendary: true} => TranslationLanguage.Yoda,
+                _ => TranslationLanguage.Shakespeare
             };
-        }
 
-        private async Task<Pokemon> TranslateToYoda(Pokemon pokemon)
-        {
-            var newDescription = await TranslateText("yoda", pokemon.Description);
-            
+            var newDescription = await _translationClient.Translate(translationLanguage, pokemon.Description);
+
             return pokemon with
             {
                 Description = newDescription ?? pokemon.Description
             };
-        }
-
-        private async Task<Pokemon> TranslateToShakespeare(Pokemon pokemon)
-        {
-            var newDescription = await TranslateText("shakespeare", pokemon.Description);
-            
-            return pokemon with
-            {
-                Description = newDescription ?? pokemon.Description
-            };
-        }
-
-        private async Task<string?> TranslateText(string language, string text)
-        {
-            var client = _httpClientFactory.CreateClient();
-
-            var form = new KeyValuePair<string, string>[]
-            {
-                new("text", text)
-            };
-
-            var content = new FormUrlEncodedContent(form);
-
-            var response =
-                await client.PostAsync($"https://api.funtranslations.com/translate/{language}.json", content);
-
-            if (response.IsSuccessStatusCode)
-            {
-                var translateResult = await response
-                    .Content
-                    .ReadFromJsonAsync<TranslationResult>();
-
-                return translateResult?.Contents.Translated;
-            }
-
-            return null;
         }
 
         private PokemonViewModel? ToViewModel(Pokemon? pokemon)
@@ -131,24 +93,6 @@ namespace TrueLayer.Api.Services
                 Habitat = pokemon.Habitat,
                 IsLegendary = pokemon.IsLegendary,
             };
-        }
-
-        public class TranslationResult
-        {
-            [JsonPropertyName("contents")]
-            public TranslationContents Contents { get; set; }
-        }
-        
-        public class TranslationContents
-        {
-            [JsonPropertyName("translated")]
-            public string Translated { get; set; }
-            
-            [JsonPropertyName("text")]
-            public string Text { get; set; }
-            
-            [JsonPropertyName("translation")]
-            public string Translation { get; set; }
         }
     }
 }
