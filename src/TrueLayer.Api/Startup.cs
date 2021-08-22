@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using TrueLayer.Api.Features.PokemonCache;
 using TrueLayer.Api.Services;
 
 namespace TrueLayer.Api
@@ -32,8 +33,10 @@ namespace TrueLayer.Api
 
             services.ConfigurePokemonClient(Configuration);
             services.ConfigureTranslation(Configuration);
+            services.ConfigurePokemonCache(Configuration);
 
             services.AddHttpClient();
+            services.AddMemoryCache();
             
             services.AddSwaggerGen();
         }
