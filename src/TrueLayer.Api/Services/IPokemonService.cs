@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using TrueLayer.Api.Features.PokemonCache;
 using TrueLayer.Api.Features.PokemonClient;
 using TrueLayer.Api.Features.Translation;
 using TrueLayer.Api.Models;
@@ -31,12 +32,14 @@ namespace TrueLayer.Api.Services
         private readonly IPokemonClient _pokemonClient;
         private readonly ITranslationClient _translationClient;
         private readonly IPokemonManager _pokemonManager;
+        private readonly IPokemonCache _pokemonCache;
 
-        public PokemonService(IPokemonClient pokemonClient, ITranslationClient translationClient, IPokemonManager pokemonManager)
+        public PokemonService(IPokemonClient pokemonClient, ITranslationClient translationClient, IPokemonManager pokemonManager, IPokemonCache pokemonCache)
         {
             _pokemonClient = pokemonClient;
             _translationClient = translationClient;
             _pokemonManager = pokemonManager;
+            _pokemonCache = pokemonCache;
         }
 
         public async Task<PokemonViewModel?> GetPokemonInformation(string name)
@@ -60,18 +63,41 @@ namespace TrueLayer.Api.Services
             return ToViewModel(pokemonTranslated);
         }
 
-        private Task<Pokemon?> GetUntranslatedPokemon(string name)
+        private async Task<Pokemon?> GetUntranslatedPokemon(string name)
         {
-            return _pokemonClient.GetPokemonWithName(name);
+            if (_pokemonCache.Get(name) is {} cachedPokemon)
+            {
+                return cachedPokemon;
+            }
+            
+            var pokemon = await _pokemonClient.GetPokemonWithName(name);
+
+            if (pokemon is null)
+            {
+                return null;
+            }
+            
+            _pokemonCache.Set(pokemon);
+
+            return pokemon;
         }
 
         private async Task<Pokemon> Translate(Pokemon pokemon)
         {
+            if (_pokemonCache.GetTranslated(pokemon.Name) is { } cachedPokemon)
+            {
+                return cachedPokemon;
+            }
+            
             var translationLanguage = _pokemonManager.ChooseTranslationLanguage(pokemon);
 
             var newDescription = await _translationClient.Translate(translationLanguage, pokemon.Description);
 
-            return _pokemonManager.UpdateDescription(pokemon, newDescription);
+            var translatedPokemon = _pokemonManager.UpdateDescription(pokemon, newDescription);
+            
+            _pokemonCache.SetTranslated(translatedPokemon);
+
+            return translatedPokemon;
         }
 
         private PokemonViewModel? ToViewModel(Pokemon? pokemon)
