@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using TrueLayer.Api.Features.PokemonCache;
 using TrueLayer.Api.Features.PokemonClient;
 using TrueLayer.Api.Features.Translation;
@@ -33,13 +35,15 @@ namespace TrueLayer.Api.Services
         private readonly ITranslationClient _translationClient;
         private readonly IPokemonManager _pokemonManager;
         private readonly IPokemonCache _pokemonCache;
+        private readonly ILogger<PokemonService> _logger;
 
-        public PokemonService(IPokemonClient pokemonClient, ITranslationClient translationClient, IPokemonManager pokemonManager, IPokemonCache pokemonCache)
+        public PokemonService(IPokemonClient pokemonClient, ITranslationClient translationClient, IPokemonManager pokemonManager, IPokemonCache pokemonCache, ILogger<PokemonService> logger)
         {
             _pokemonClient = pokemonClient;
             _translationClient = translationClient;
             _pokemonManager = pokemonManager;
             _pokemonCache = pokemonCache;
+            _logger = logger;
         }
 
         public async Task<PokemonViewModel?> GetPokemonInformation(string name)
@@ -67,7 +71,13 @@ namespace TrueLayer.Api.Services
         {
             if (_pokemonCache.Get(name) is {} cachedPokemon)
             {
+                _logger.LogDebug("Get cache hit: {0}", name);
+                
                 return cachedPokemon;
+            }
+            else
+            {
+                _logger.LogDebug("Get cache miss: {0}", name);
             }
             
             var pokemon = await _pokemonClient.GetPokemonWithName(name);
@@ -86,7 +96,13 @@ namespace TrueLayer.Api.Services
         {
             if (_pokemonCache.GetTranslated(pokemon.Name) is { } cachedPokemon)
             {
+                _logger.LogDebug("GetTranslated cache hit: {0}", pokemon.Name);
+                
                 return cachedPokemon;
+            }
+            else
+            {
+                _logger.LogDebug("GetTranslated cache miss: {0}", pokemon.Name);
             }
             
             var translationLanguage = _pokemonManager.ChooseTranslationLanguage(pokemon);
