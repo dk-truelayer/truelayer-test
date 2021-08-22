@@ -76,6 +76,12 @@ The mitigation was introduced in .net core 2.1, which is the `IHttpClientFactory
 This cycles the message handlers, preventing stale DNS; and also pools the handlers,
 preventing socket exhaustion.
 
+## String cleaning
+
+The `flavor_text` returned by PokeApi often had a lot of escaped whitespace 
+characters (`\r\n`) in it. I wrote an extension method to clean replace all
+whitespace blocks with a single space. 
+
 ## Whether or not to use a client library
 
 The `PokeApi` has a client library, which I believe is generated from OpenApi
