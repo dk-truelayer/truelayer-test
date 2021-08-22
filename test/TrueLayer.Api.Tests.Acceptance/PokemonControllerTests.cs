@@ -65,5 +65,25 @@ namespace TrueLayer.Api.Tests.Acceptance
             Assert.Equal("mewtwo", json.Name);
         }
 
+        [Fact]
+        public async Task TranslatedAndUntranslatedPokemonDescriptionsDiffer()
+        {
+            var client = _factory.CreateClient();
+
+            var untranslatedResponse = await client.GetAsync("pokemon/mewtwo");
+            var untranslatedPokemon = await untranslatedResponse
+                .EnsureSuccessStatusCode()
+                .Content
+                .ReadFromJsonAsync<PokemonViewModel>();
+            
+            var translatedResponse = await client.GetAsync("pokemon/translated/mewtwo");
+            var translatedPokemon = await translatedResponse
+                .EnsureSuccessStatusCode()
+                .Content
+                .ReadFromJsonAsync<PokemonViewModel>();
+            
+            Assert.NotEqual(untranslatedPokemon.Description, translatedPokemon.Description);
+        }
+
     }
 }

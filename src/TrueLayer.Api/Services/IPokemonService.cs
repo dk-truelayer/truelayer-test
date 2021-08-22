@@ -44,10 +44,17 @@ namespace TrueLayer.Api.Services
         {
             var pokemon = await GetUntranslatedPokemon(name);
 
-            return ToViewModel(pokemon);
+            if (pokemon is null)
+            {
+                return null;
+            }
+
+            var pokemonTranslated = await Translate(pokemon);
+            
+            return ToViewModel(pokemonTranslated);
         }
 
-        public async Task<Pokemon?> GetUntranslatedPokemon(string name)
+        private async Task<Pokemon?> GetUntranslatedPokemon(string name)
         {
             var client = _httpClientFactory.CreateClient();
 
@@ -70,6 +77,61 @@ namespace TrueLayer.Api.Services
                         pokemonSpecies.Habitat.Name,
                         pokemonSpecies.IsLegendary);
                 }
+            }
+
+            return null;
+        }
+
+        private Task<Pokemon> Translate(Pokemon pokemon)
+        {
+            return pokemon switch
+            {
+                {Habitat: "cave"} or {IsLegendary: true} => TranslateToYoda(pokemon),
+                { } => TranslateToShakespeare(pokemon)
+            };
+        }
+
+        private async Task<Pokemon> TranslateToYoda(Pokemon pokemon)
+        {
+            var newDescription = await TranslateText("yoda", pokemon.Description);
+            
+            return pokemon with
+            {
+                Description = newDescription ?? pokemon.Description
+            };
+        }
+
+        private async Task<Pokemon> TranslateToShakespeare(Pokemon pokemon)
+        {
+            var newDescription = await TranslateText("shakespeare", pokemon.Description);
+            
+            return pokemon with
+            {
+                Description = newDescription ?? pokemon.Description
+            };
+        }
+
+        private async Task<string?> TranslateText(string language, string text)
+        {
+            var client = _httpClientFactory.CreateClient();
+
+            var form = new KeyValuePair<string, string>[]
+            {
+                new("text", text)
+            };
+
+            var content = new FormUrlEncodedContent(form);
+
+            var response =
+                await client.PostAsync($"https://api.funtranslations.com/translate/{language}.json", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var translateResult = await response
+                    .Content
+                    .ReadFromJsonAsync<TranslationResult>();
+
+                return translateResult?.Contents.Translated;
             }
 
             return null;
@@ -125,6 +187,24 @@ namespace TrueLayer.Api.Services
         {
             [JsonPropertyName("name")]
             public string Name { get; set; }
+        }
+
+        public class TranslationResult
+        {
+            [JsonPropertyName("contents")]
+            public TranslationContents Contents { get; set; }
+        }
+        
+        public class TranslationContents
+        {
+            [JsonPropertyName("translated")]
+            public string Translated { get; set; }
+            
+            [JsonPropertyName("text")]
+            public string Text { get; set; }
+            
+            [JsonPropertyName("translation")]
+            public string Translation { get; set; }
         }
     }
 }
