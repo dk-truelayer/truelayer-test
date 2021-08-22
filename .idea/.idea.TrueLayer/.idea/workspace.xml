@@ -5,7 +5,15 @@
     <projectFile profileName="TrueLayer.Api">TrueLayer.Api/TrueLayer.Api.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="10d9030b-0b47-4bf2-8902-d6098126ee66" name="Changes" comment="" />
+    <list default="true" id="10d9030b-0b47-4bf2-8902-d6098126ee66" name="Changes" comment="Initial commit">
+      <change afterPath="$PROJECT_DIR$/src/TrueLayer.Api/Controllers/PokemonController.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TrueLayer.Api/ViewModels/PokemonViewModel.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/TrueLayer.Api.Tests.Acceptance/PokemonControllerTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/TrueLayer.Api.Tests.Acceptance/TestAppFactory.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.TrueLayer/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TrueLayer/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/Readme.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/TrueLayer.Api.Tests.Acceptance/TrueLayer.Api.Tests.Acceptance.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/test/TrueLayer.Api.Tests.Acceptance/TrueLayer.Api.Tests.Acceptance.csproj" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -69,7 +77,16 @@
       <updated>1629650977030</updated>
       <workItem from="1629650978990" duration="654000" />
       <workItem from="1629651642558" duration="15000" />
+      <workItem from="1629651692338" duration="519000" />
     </task>
+    <task id="LOCAL-00001" summary="Initial commit">
+      <created>1629651714478</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1629651714478</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -78,7 +95,20 @@
   <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+    <MESSAGE value="Initial commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="Initial commit" />
   </component>
 </project>
