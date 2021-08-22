@@ -30,11 +30,13 @@ namespace TrueLayer.Api.Services
     {
         private readonly IPokemonClient _pokemonClient;
         private readonly ITranslationClient _translationClient;
+        private readonly IPokemonManager _pokemonManager;
 
-        public PokemonService(IPokemonClient pokemonClient, ITranslationClient translationClient)
+        public PokemonService(IPokemonClient pokemonClient, ITranslationClient translationClient, IPokemonManager pokemonManager)
         {
             _pokemonClient = pokemonClient;
             _translationClient = translationClient;
+            _pokemonManager = pokemonManager;
         }
 
         public async Task<PokemonViewModel?> GetPokemonInformation(string name)
@@ -65,18 +67,11 @@ namespace TrueLayer.Api.Services
 
         private async Task<Pokemon> Translate(Pokemon pokemon)
         {
-            var translationLanguage = pokemon switch
-            {
-                {Habitat: "cave"} or {IsLegendary: true} => TranslationLanguage.Yoda,
-                _ => TranslationLanguage.Shakespeare
-            };
+            var translationLanguage = _pokemonManager.ChooseTranslationLanguage(pokemon);
 
             var newDescription = await _translationClient.Translate(translationLanguage, pokemon.Description);
 
-            return pokemon with
-            {
-                Description = newDescription ?? pokemon.Description
-            };
+            return _pokemonManager.UpdateDescription(pokemon, newDescription);
         }
 
         private PokemonViewModel? ToViewModel(Pokemon? pokemon)

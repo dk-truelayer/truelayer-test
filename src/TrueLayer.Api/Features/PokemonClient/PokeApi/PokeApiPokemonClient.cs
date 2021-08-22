@@ -45,7 +45,7 @@ namespace TrueLayer.Api.Features.PokemonClient.PokeApi
 
                     return new Pokemon(
                         pokemonSpecies.Name,
-                        description,
+                        description.CompactWhitespace(),
                         pokemonSpecies.Habitat.Name,
                         pokemonSpecies.IsLegendary);
                 }
