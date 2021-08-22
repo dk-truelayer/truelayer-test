@@ -5,14 +5,15 @@
     <projectFile profileName="TrueLayer.Api">TrueLayer.Api/TrueLayer.Api.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="10d9030b-0b47-4bf2-8902-d6098126ee66" name="Changes" comment="Initial commit">
-      <change afterPath="$PROJECT_DIR$/src/TrueLayer.Api/Controllers/PokemonController.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/TrueLayer.Api/ViewModels/PokemonViewModel.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/TrueLayer.Api.Tests.Acceptance/PokemonControllerTests.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/TrueLayer.Api.Tests.Acceptance/TestAppFactory.cs" afterDir="false" />
+    <list default="true" id="10d9030b-0b47-4bf2-8902-d6098126ee66" name="Changes" comment="Scaffolded controller, acceptance tests">
+      <change afterPath="$PROJECT_DIR$/src/TrueLayer.Api/Models/Pokemon.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TrueLayer.Api/Services/IPokemonService.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TrueLayer/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TrueLayer/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/Readme.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/TrueLayer.Api.Tests.Acceptance/TrueLayer.Api.Tests.Acceptance.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/test/TrueLayer.Api.Tests.Acceptance/TrueLayer.Api.Tests.Acceptance.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/TrueLayer.Api/Controllers/PokemonController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/TrueLayer.Api/Controllers/PokemonController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/TrueLayer.Api/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/TrueLayer.Api/Startup.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/TrueLayer.Api/TrueLayer.Api.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/TrueLayer.Api/TrueLayer.Api.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/TrueLayer.Api/ViewModels/PokemonViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/TrueLayer.Api/ViewModels/PokemonViewModel.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,7 +78,7 @@
       <updated>1629650977030</updated>
       <workItem from="1629650978990" duration="654000" />
       <workItem from="1629651642558" duration="15000" />
-      <workItem from="1629651692338" duration="519000" />
+      <workItem from="1629651692338" duration="3907000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <created>1629651714478</created>
@@ -86,7 +87,14 @@
       <option name="project" value="LOCAL" />
       <updated>1629651714478</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Scaffolded controller, acceptance tests">
+      <created>1629652259284</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1629652259284</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -109,6 +117,7 @@
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="Initial commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="Initial commit" />
+    <MESSAGE value="Scaffolded controller, acceptance tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="Scaffolded controller, acceptance tests" />
   </component>
 </project>
